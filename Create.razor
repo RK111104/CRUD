@@ -1,0 +1,60 @@
+﻿@page "/games/create/"
+@inject HttpClient _client
+@inject NavigationManager _navManager
+
+
+<h3 class="card-title">Add Game</h3>
+<hr />
+<br />
+
+<EditForm Model="@game" OnValidSubmit="CreateGame">
+
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <div class="form-group">
+        <label>Add Game: </label>
+        <div>
+            <InputText @bind-Value="@game.GameName" class="form-control" />
+            <ValidationMessage For="@(() => game.GameName)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Add Company Name: </label>
+        <div>
+            <InputText @bind-Value="@game.GameCompany" class="form-control" />
+            <ValidationMessage For="@(() => game.GameCompany)" />
+        </div>
+    </div>
+
+    <ValidationSummary />
+    <button type="submit" class="btn btn-success btn-block">
+        Create Game
+    </button>
+
+    <BackToList Target="games" />
+
+
+
+</EditForm>
+
+@code {
+    Games game = new Games();
+
+    private IList<Games> Games;
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        Games = await _client.GetFromJsonAsync<List<Games>>($"{Endpoints.GamesEndPoint}");
+    }
+
+    private async Task CreateGame()
+    {
+        await _client.PostAsJsonAsync(Endpoints.GamesEndPoint, game);
+        _navManager.NavigateTo("/games/");
+    }
+
+
+}
+
+
