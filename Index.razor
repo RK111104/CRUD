@@ -1,19 +1,22 @@
-﻿@page  "/games/"
+﻿@page  "/reviews/"
 @inject HttpClient _client
 @inject IJSRuntime js
 @attribute [Authorize]
 
 
-<h3 class="card-title">Games</h3>
-<a href="/games/create" class="btn btn-secondary">
+
+<h3 class="card-title">Reviews</h3>
+<a href="/reviews/create" class="btn btn-secondary">
     <span class="oi oi-plus"></span>
-    Add Games
+    Add Reviews
 </a>
 <br />
 <br />
-@if (Games == null)
+
+<h3 class="card-title">Reviews</h3>
+@if (Reviews == null)
 {
-    <div class="alert alert-info">Loading Games..</div>
+    <div class="alert alert-info">Loading Reviews..</div>
 }
 
 else
@@ -21,29 +24,32 @@ else
     <table class="table table-responsive">
         <thead>
             <tr>
-                <th>Game Name</th>
-                <th>Game Company</th>
+                <th>Game Title</th>
+                <th>Review Description</th>
+                <th>Rating</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var game in Games)
+            @foreach (var review in Reviews)
             {
             <tr>
-                <td>@game.GameName</td>
-                <td>@game.GameCompany</td>
+                <td>@review.ReviewTitle</td>
+                <td>@review.ReviewDescription</td>
+                <td>@review.Rating</td>
                 <td>
-                    <a href="/games/view/@game.Id" class="btn btn-primary">
+                    <a href="/reviews/view/@review.ID" class="btn btn-primary">
                         <span class="oi oi-book"></span>
                     </a>
-                    <a href="/games/edit/@game.Id" class="btn btn-warning">
+                    <a href="/reviews/edit/@review.ID" class="btn btn-warning">
                         <span class="oi oi-pencil"></span>
                     </a>
-                    <button class="btn btn-danger" @onclick="@(()=>Delete(game.Id))">
+                    <button class="btn btn-danger" @onclick="@(()=>Delete(review.ID))">
                         <span class="oi oi-delete"></span>
                     </button>
                 </td>
             </tr>
+
             }
         </tbody>
     </table>
@@ -52,20 +58,20 @@ else
 
 
 @code {
-    private List<Games> Games;
+    private List<Reviews> Reviews;
 
     protected async override Task OnInitializedAsync()
     {
-        Games = await _client.GetFromJsonAsync<List<Games>>($"{Endpoints.GamesEndPoint}");
+        Reviews = await _client.GetFromJsonAsync<List<Reviews>>($"{Endpoints.ReviewsEndPoint}");
     }
 
-    async Task Delete(int gameId)
+    async Task Delete(int reviewId)
     {
-        var game = Games.First(q => q.Id == gameId);
-        var confirm = await js.InvokeAsync<bool>("confirm", $"do you want to delete {game.GameName}?");
+        var review = Reviews.First(q => q.ID == reviewId);
+        var confirm = await js.InvokeAsync<bool>("confirm", $"do you want to delete {review.ReviewTitle}?");
         if (confirm)
         {
-            await _client.DeleteAsync($"{Endpoints.GamesEndPoint}/{gameId}");
+            await _client.DeleteAsync($"{Endpoints.ReviewsEndPoint}/{reviewId}");
             await OnInitializedAsync();
 
         }
