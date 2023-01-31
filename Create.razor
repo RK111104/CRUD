@@ -17,6 +17,14 @@
             <ValidationMessage For="@(() => game.GameName)" />
         </div>
     </div>
+    
+    <div class="form-group">
+        <label>Add Game Price: </label>
+        <div>
+            <InputText @bind-Value="@game.GamePrice" class="form-control" />
+            <ValidationMessage For="@(() => game.GamePrice)" />
+        </div>
+    </div>
 
     <div class="form-group">
         <label>Add Company Name: </label>
