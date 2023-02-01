@@ -2,7 +2,7 @@
 
     <DataAnnotationsValidator></DataAnnotationsValidator>
     <div class="form-group">
-        <label>Add Game: </label>
+        <label>Add Game Name: </label>
         <div>
             <InputText @bind-Value="@game.GameName" class="form-control" />
             <ValidationMessage For="@(() => game.GameName)" />
